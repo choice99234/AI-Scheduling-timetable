@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Scheduling Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2bb2a5;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #8cd8d0;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 10px;
+            justify-content: center; /* Center buttons vertically */
+            align-items: center; /* Center buttons horizontally */
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            background-color: white;
+            color: #2bb2a5;
+            cursor: pointer;
+            width: 200px;
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Ensure it behaves like a button */
+            text-align: center; /* Center text */
+        }
+
+        .btn:hover {
+            background-color: #4fd1c5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Scheduling Assistant Timetable</h1>
+        <div class="button-container">
+            <a class="btn" href="/login?role=admin">Admin</a>
+            <a class="btn" href="/login?role=lecture">Lecture</a>
+            <a class="btn" href="/login?role=student">Student</a>
+        </div>
+    </div>
+</body>
+</html>

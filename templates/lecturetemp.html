@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable - Lecture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2bb2a5;
+        }
+        /* Program button section with dropdowns */
+        .program-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .program-btn {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #3CAEA3;
+            border: 2px solid #3CAEA3;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .program-btn:hover, .dropdown:hover .program-btn {
+            background-color: #3CAEA3;
+            color: #ffffff;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 10px;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: #3CAEA3;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #3CAEA3;
+            color: #fff;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .timetable-container {
+            background-color: #43B9AD;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .program-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .program-button div {
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #43B9AD;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: rgba(67, 185, 173, 0.3);
+            font-weight: bold;
+        }
+
+        td {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .day-column {
+            font-weight: bold;
+            background-color: rgba(67, 185, 173, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="timetable-container">
+        <div class="program-buttons">
+            <div class="dropdown">
+                <button class="program-btn">BSC</button>
+                <div class="dropdown-content">
+                    <a href="lecturetemp.html" onclick="changeLectureName('Madam Ethel')">Madam Ethel</a>
+                    <a href="lecturetemp.html" onclick="changeLectureName('Mr. Crusade')">Mr. Crusade</a>
+                    <a href="lecturetemp.html" onclick="changeLectureName('Mr. Stain')">Mr. Stain</a>
+                    <a href="lecturetemp.html" onclick="changeLectureName('Mr. Steve')">Mr. Steve</a>
+                    <a href="lecturetemp.html" onclick="changeLectureName('Mr. Gracian')">Mr. Gracian</a>
+                    <a href="lecturetemp.html" onclick="changeLectureName('Dr. Luhanga')">Dr. Luhanga</a>
+                </div>
+            </div>
+            <div id="lecture-name" class="lecture-name">Lecture Name</div>
+        </div>
+
+        <script>
+            function changeLectureName(lectureName) {
+                // Get the lecture name div
+                const lectureNameDiv = document.getElementById('lecture-name');
+                event.preventDefault();
+                
+                // Change the text inside the div
+                lectureNameDiv.textContent = lectureName;
+            }
+        </script>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>DAYS</th>
+                    <th>7:30 to 8:15</th>
+                    <th>8:15 to 9:00</th>
+                    <th>9:00 to 9:45</th>
+                    <th>9:45 to 10:30</th>
+                    <th>10:30 to 11:15</th>
+                    <th>11:15 to 12:15</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="day-column">MONDAY</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="day-column">TUESDAY</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="day-column">WEDNESDAY</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="day-column">THURSDAY</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="day-column">FRIDAY</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

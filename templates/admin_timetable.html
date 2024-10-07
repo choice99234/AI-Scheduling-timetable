@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Timetable Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2bb2a5;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+        }
+        .container {
+            display: flex;
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .form-container, .timetable-container {
+            flex: 1;
+            padding: 15px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 6px 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .flash-message {
+            margin: 20px;
+            padding: 10px;
+            background-color: #d4edda; /* Green background */
+            color: #155724; /* Dark green text */
+            border: 1px solid #c3e6cb; /* Light green border */
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Admin Timetable Assignment</h1>
+        <form id="timetable-form" action="/admin_timetable" method="POST">
+            <div class="form-group">
+                <label for="day">Day:</label>
+                <select id="day" name="day" required>
+                    <option value="">Select Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" placeholder="Enter subject" required>
+            </div>
+            <div class="form-group">
+                <label for="lecture">Lecture:</label>
+                <input type="text" id="lecture" name="lecture" placeholder="Enter lecture name" required>
+            </div>
+            <div class="form-group">
+                <label for="room">Room:</label>
+                <input type="text" id="room" name="room" placeholder="Enter room number" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Time:</label>
+                <input type="text" id="time" name="time" placeholder="Enter time (e.g., 10:00 AM)" required>
+            </div>
+            <div class="form-group">
+                <label for="batch">Batch:</label>
+                <select id="batch" name="batch" required>
+                    <option value="">Select Batch</option>
+                    <option value="BSC">BSC</option>
+                    <option value="BSW">BSW</option>
+                    <option value="BBA">BBA</option>
+                    <option value="BCom">BCom</option>
+                </select>
+            </div>
+            <button type="submit">Add Timetable Entry</button>
+        </form>
+    </div>
+
+    <div class="timetable-container">
+        <table id="timetable">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Subject</th>
+                    <th>Lecture</th>
+                    <th>Room</th>
+                    <th>Time</th>
+                    <th>Batch</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in timetable %}
+                <tr>
+                    <td>{{ entry.day }}</td>
+                    <td>{{ entry.subject }}</td>
+                    <td>{{ entry.lecture }}</td>
+                    <td>{{ entry.room }}</td>
+                    <td>{{ entry.time }}</td>
+                    <td>{{ entry.batch }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

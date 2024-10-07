@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch 11 Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        h2 {
+            text-align: center;
+            color: #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #dcdcdc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Batch 11 Timetable</h1>
+        <h2>Semester I</h2>
+        <table class="timetable">
+            <thead>
+                <tr>
+                    <th>DAYS</th>
+                    <th>7:30 am to 9:30 am</th>
+                    <th>9:30 am to 11:30 am</th>
+                    <th>11:30 am to 12:30 pm</th>
+                    <th>12:30 pm to 2:30 pm</th>
+                    <th>2:30 pm to 4:30 pm</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, classes in timetable.items() %}
+                <tr>
+                    <td>{{ day }}</td>
+                    {% for class in classes %}
+                    <td>{{ class }}</td>
+                    {% else %}
+                    <td>No class</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

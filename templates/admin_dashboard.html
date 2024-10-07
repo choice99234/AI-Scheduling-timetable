@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Basic reset */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            display: flex;
+            height: 100vh; /* Full height */
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 50%; /* Half width for timetable */
+            padding: 20px;
+            background-color: #4ba3a2;
+            color: white;
+        }
+
+        /* Main content styles */
+        .main-content {
+            width: 50%; /* Half width for users table */
+            padding: 20px;
+            overflow-y: auto; /* Scroll if content overflows */
+        }
+
+        /* Program buttons styles */
+        .program-buttons {
+            margin-bottom: 20px;
+        }
+
+        .program-btn {
+            background-color: #3CAEA3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-right: 5px; /* Space between buttons */
+        }
+
+        .program-btn.active {
+            background-color: #2a8587; /* Darker color for active button */
+        }
+
+        /* Timetable styles */
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .timetable th, .timetable td {
+            border: 1px solid #2bb2a5;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #fff; /* Change text color of days */
+        }
+
+        .timetable th {
+            background-color: #2bb2a5;
+            font-weight: bold;
+        }
+
+        .timetable tbody tr td:first-child {
+            font-weight: bold;
+            background-color: #2bb2a5;
+        }
+
+        /* User table styles */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table th, .user-table td {
+            border: 1px solid #2bb2a5;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .user-table th {
+            background-color: #2bb2a5;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .user-table tbody tr td:first-child {
+            font-weight: bold;
+            background-color: #E5F6F7;
+        }
+
+        /* Button styles */
+        .delete-btn, .edit-btn, .add-btn {
+            background-color: #e74c3c; /* Red background for delete */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #3498db; /* Blue background for edit */
+        }
+
+        .add-btn {
+            background-color: #2ecc71; /* Green background for add */
+        }
+
+        .delete-btn:hover, .edit-btn:hover, .add-btn:hover {
+            opacity: 0.9; /* Slightly fade on hover */
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>AI Timetable</h2>
+
+            <!-- Program buttons -->
+            <div class="program-buttons">
+                <button class="program-btn active">BSC</button>
+                <button class="program-btn">BSW</button>
+                <button class="program-btn">BCOM</button>
+                <button class="program-btn">BBA</button>
+            </div>
+
+            <!-- Timetable for BSC -->
+            <table class="timetable">
+                <thead>
+                    <tr>
+                        <th>DAYS</th>
+                        <th>7:30 am to 9:30</th>
+                        <th>9:30 to 11:30</th>
+                        <th>11:30 to 12:30</th>
+                        <th>12:30 to 2:30</th>
+                        <th>2:30 to 4:30</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MONDAY</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>TUESDAY</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>WEDNESDAY</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>THURSDAY</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>FRIDAY</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <button class="home-btn" onclick="window.location.href='{{ url_for('admin_timetable') }}'">Manage Timetable</button>
+            <h2>Registered Users</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editUser({{ user.id }})">Edit</button>
+                            <button class="delete-btn" onclick="deleteUser({{ user.id }})">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        <!-- Add User Form -->
+        <h3>Add New User</h3>
+        <div class="form-group">
+            <label class="form-label" for="username">Username:</label>
+            <input type="text" id="username" class="form-input" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="role">Role:</label>
+            <input type="text" id="role" class="form-input" placeholder="Enter role (e.g., admin, lecture, student)" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="registration_number">Registration Number:</label>
+            <input type="text" id="registration_number" class="form-input" placeholder="Enter registration number" required>
+        </div>
+        <button class="add-btn" onclick="addUser()">Add User</button>
+        <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}'">Back</button>
+
+        <div id="message" style="margin-top: 10px; color: green;"></div>
+       </div>
+       </div>
+
+    <script>
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                fetch(`/delete_user/${userId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();  // Refresh page to update user list
+                    } else {
+                        alert('Error deleting user');
+                    }
+                });
+            }
+        }
+
+        function editUser(userId) {
+            const newUsername = prompt("Enter new username:");
+            const newRole = prompt("Enter new role:");
+            if (newUsername && newRole) {
+                fetch(`/edit_user/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: newUsername, role: newRole })
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Error updating user');
+                    }
+                });
+            }
+        }
+
+        function addUser() {
+            const username = document.getElementById('username').value;
+            const role = document.getElementById('role').value;
+            const registrationNumber = document.getElementById('registration_number').value;
+
+            if (username && role && registrationNumber) {
+                fetch('/add_user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        role: role,
+                        registration_number: registrationNumber
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        document.getElementById('message').textContent = 'User added successfully!';
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        document.getElementById('message').textContent = 'Credencials already exists';
+                    }
+                });
+            } else {
+                alert('Please fill out all fields');
+            }
+        }
+    </script>
+</body>
+</html>

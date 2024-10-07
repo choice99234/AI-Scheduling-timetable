@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Timetable</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #2bb2a5;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-content {
+            background-color: #43B9AD;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 900px;
+        }
+        .program-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .program-btn {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #3CAEA3;
+            border: 2px solid #3CAEA3;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .program-btn:hover, .dropdown:hover .program-btn {
+            background-color: #3CAEA3;
+            color: #ffffff;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 10px;
+        }
+        .dropdown-content a {
+            color: #3CAEA3;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .dropdown-content a:hover {
+            background-color: #3CAEA3;
+            color: #fff;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .timetable th, .timetable td {
+            border: 1px solid #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .timetable th {
+            background-color: #43B9AD;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .timetable td {
+            background-color: #f4f4f4;
+        }
+        .timetable tbody tr td:first-child {
+            font-weight: bold;
+            background-color: #E5F6F7;
+        }
+        @media screen and (max-width: 768px) {
+            .program-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .program-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .dropdown-content {
+                width: 100%;
+            }
+            .timetable th, .timetable td {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="program-buttons">
+                <div class="dropdown">
+                    <button class="program-btn">BSC</button>
+                    <div class="dropdown-content">
+                        <a id="ethel" href="#">Madam Ethel</a>
+                        <a id="crusade" href="#">Mr. Crusade</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="program-btn">BBA</button>
+                    <div class="dropdown-content">
+                        <a id="blessings" href="#">Mr. Blessings Nyirenda</a>
+                        <a id="alice" href="#">Ms. Alice Kachale</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="program-btn">BSW</button>
+                    <div class="dropdown-content">
+                        <a id="daniel" href="#">Mr. Daniel Mvula</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="program-btn">BCOM</button>
+                    <div class="dropdown-content">
+                        <a id="mphatso" href="#">Dr. Mphatso Gondwe</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetable -->
+            <table class="timetable" id="timetable">
+                <thead>
+                    <tr>
+                        <th>Days</th>
+                        <th>7:30 am - 9:30 am</th>
+                        <th>9:30 am - 11:30 am</th>
+                        <th>11:30 am - 12:30 pm</th>
+                        <th>12:30 pm - 2:30 pm</th>
+                        <th>2:30 pm - 4:30 pm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monday</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Wednesday</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Thursday</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Friday</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Example data from student_dashboard or external source
+        const lecturerTimetable = {
+            'Madam Ethel': {
+                'Monday': ['Math', 'Physics', '', 'Chemistry', ''],
+                'Tuesday': ['', 'Math', '', '', 'Physics'],
+                'Wednesday': ['Chemistry', '', 'Physics', 'Math', ''],
+                'Thursday': ['Math', 'Chemistry', '', 'Physics', ''],
+                'Friday': ['', 'Physics', 'Chemistry', '', 'Math']
+            },
+            'Mr. Crusade': {
+                'Monday': ['', '', 'Chemistry', '', 'Math'],
+                'Tuesday': ['Physics', '', 'Math', '', ''],
+                'Wednesday': ['Math', 'Chemistry', '', '', 'Physics'],
+                'Thursday': ['', 'Physics', '', 'Math', 'Chemistry'],
+                'Friday': ['Chemistry', '', 'Physics', 'Math', '']
+            },
+            'Mr. Blessings Nyirenda': {
+                'Monday': ['Marketing', 'Finance', '', 'Management', ''],
+                'Tuesday': ['', 'Marketing', '', '', 'Finance'],
+                'Wednesday': ['Management', '', 'Marketing', 'Finance', ''],
+                'Thursday': ['Finance', 'Management', '', '', 'Marketing'],
+                'Friday': ['Marketing', '', 'Finance', 'Management', '']
+            },
+            'Ms. Alice Kachale': {
+                'Monday': ['', '', 'Marketing', '', 'Finance'],
+                'Tuesday': ['Management', '', 'Marketing', '', ''],
+                'Wednesday': ['Finance', 'Marketing', '', '', 'Management'],
+                'Thursday': ['', 'Finance', 'Management', '', 'Marketing'],
+                'Friday': ['Management', '', 'Marketing', '', 'Finance']
+            },
+            'Mr. Daniel Mvula': {
+                'Monday': ['Social Work Theory', '', 'Human Rights', 'Counseling', ''],
+                'Tuesday': ['', 'Counseling', 'Social Work Theory', '', ''],
+                'Wednesday': ['Human Rights', 'Social Work Theory', '', 'Counseling', ''],
+                'Thursday': ['Counseling', '', 'Human Rights', 'Social Work Theory', ''],
+                'Friday': ['', 'Human Rights', '', 'Counseling', '']
+            },
+            'Dr. Mphatso Gondwe': {
+                'Monday': ['Accounting', 'Business Law', '', 'Economics', ''],
+                'Tuesday': ['', 'Accounting', '', '', 'Business Law'],
+                'Wednesday': ['Economics', '', 'Accounting', 'Business Law', ''],
+                'Thursday': ['Business Law', 'Economics', '', 'Accounting', ''],
+                'Friday': ['', 'Economics', 'Business Law', '', 'Accounting']
+            }
+        };
+
+        function updateTimetable(lecturer) {
+            const timetable = lecturerTimetable[lecturer];
+            const table = document.getElementById('timetable').getElementsByTagName('tbody')[0];
+
+            // Clear the timetable before updating
+            for (let i = 0; i < table.rows.length; i++) {
+                for (let j = 1; j < table.rows[i].cells.length; j++) {
+                    table.rows[i].cells[j].innerHTML = '';
+                }
+            }
+
+            // Update the timetable with lecturer data
+            if (timetable) {
+                let rowIndex = 0;
+                for (let day in timetable) {
+                    let periods = timetable[day];
+                    let cells = table.rows[rowIndex].cells;
+                    for (let i = 0; i < periods.length; i++) {
+                        cells[i + 1].innerHTML = periods[i];
+                    }
+                    rowIndex++;
+                }
+            }
+        }
+
+        // Event listeners for dropdown selections
+        document.getElementById('ethel').addEventListener('click', function() {
+            updateTimetable('Madam Ethel');
+        });
+
+        document.getElementById('crusade').addEventListener('click', function() {
+            updateTimetable('Mr. Crusade');
+        });
+
+        document.getElementById('blessings').addEventListener('click', function() {
+            updateTimetable('Mr. Blessings Nyirenda');
+        });
+
+        document.getElementById('alice').addEventListener('click', function() {
+            updateTimetable('Ms. Alice Kachale');
+        });
+
+        document.getElementById('daniel').addEventListener('click', function() {
+            updateTimetable('Mr. Daniel Mvula');
+        });
+
+        document.getElementById('mphatso').addEventListener('click', function() {
+            updateTimetable('Dr. Mphatso Gondwe');
+        });
+
+        // Add other event listeners as necessary
+    </script>
+</body>
+</html>

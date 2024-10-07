@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2bb2a5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2bb2a5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            color: #555;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .break {
+            background-color: #f8d7da;
+            font-weight: bold;
+        }
+
+        .timetable-section {
+            display: none; /* Hidden by default, to toggle between semester 1 and 2 */
+        }
+
+        .active {
+            display: block; /* Show the active timetable section */
+        }
+
+        .canceled {
+            background-color: #f8d7da; /* Highlight canceled classes */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Student Dashboard</h1>
+        
+        <h2>Select Your Department and Batch</h2>
+        <label for="department">Department:</label>
+        <select id="department">
+            <option value="">Select Department</option>
+            <option value="BSC">BSC</option>
+            <option value="BBA">BBA</option>
+            <option value="BSW">BSW</option>
+            <option value="BCOM">BCOM</option>
+        </select>
+
+        <label for="batch">Batch:</label>
+        <select id="batch">
+            <option value="">Select Batch</option>
+        </select>
+
+        <button id="view-timetable">View Timetable</button>
+
+        <div id="semester-buttons" style="display: none;">
+            <button class="semester-button" data-semester="1">View Semester 1</button>
+            <button class="semester-button" data-semester="2">View Semester 2</button>
+        </div>
+
+        <div id="timetable-display">
+            <!-- Timetable for Semester 1 -->
+            <div id="semester-1" class="timetable-section">
+                <h2>Semester 1 Timetable</h2>
+                <table id="timetable-1">
+                    <!-- Timetable data will be inserted here -->
+                </table>
+            </div>
+
+            <!-- Timetable for Semester 2 -->
+            <div id="semester-2" class="timetable-section">
+                <h2>Semester 2 Timetable</h2>
+                <table id="timetable-2">
+                    <!-- Timetable data will be inserted here -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Function to dynamically assign teachers to subjects
+            function assignTeachers(department, semester) {
+                const teachers = {
+                    'BSC': {
+                        'semester1': {
+                            'Math': 'Dr. Peter Chitsulo',
+                            'Physics': 'Ms. Chikondi Banda',
+                            'Chemistry': 'Prof. Mwayi Munthali'
+                        },
+                        'semester2': {
+                            'Math': 'Mr. Hastings Mbewe',
+                            'Chemistry': 'Ms. Kondwani Chafuwa',
+                            'Biology': 'Dr. Memory Phiri'
+                        }
+                    },
+                    'BBA': {
+                        'semester1': {
+                            'Marketing': 'Mr. Blessings Nyirenda',
+                            'Finance': 'Ms. Alice Kachale',
+                            'Management': 'Dr. Yamikani Kainja'
+                        },
+                        'semester2': {
+                            'Marketing': 'Mrs. Chisomo Mpinganjira',
+                            'Finance': 'Mr. James Nkhoma',
+                            'Management': 'Dr. Thoko Banda'
+                        }
+                    },
+                    'BSW': {
+                        'semester1': {
+                            'Social Work Theory': 'Mr. Daniel Mvula',
+                            'Human Rights': 'Ms. Grace Kadzamira',
+                            'Counseling': 'Dr. Raphael Nyasulu'
+                        },
+                        'semester2': {
+                            'Social Work Practice': 'Mrs. Cecilia Mhango',
+                            'Human Rights': 'Dr. Gloria Kamoto',
+                            'Counseling Techniques': 'Mr. Alfred Phiri'
+                        }
+                    },
+                    'BCOM': {
+                        'semester1': {
+                            'Accounting': 'Dr. Mphatso Gondwe',
+                            'Economics': 'Mr. Patience Jere',
+                            'Business Law': 'Ms. Mwiza Chalamanda'
+                        },
+                        'semester2': {
+                            'Accounting': 'Mr. Moses Ngwira',
+                            'Economics': 'Dr. Eluby Chapotera',
+                            'Business Law': 'Mrs. Ruth Nyirenda'
+                        }
+                    }
+                };
+
+                return teachers[department][semester];
+            }
+
+            // Function to assign classrooms
+            function assignClassrooms(department, semester) {
+                const classrooms = {
+                    'BSC': {
+                        'semester1': {
+                            'Math': 'LH1',
+                            'Physics': 'Conference Hall',
+                            'Chemistry': 'Theater Hall'
+                        },
+                        'semester2': {
+                            'Math': 'LH2',
+                            'Chemistry': 'LH3',
+                            'Biology': 'Conference Hall'
+                        }
+                    },
+                    'BBA': {
+                        'semester1': {
+                            'Marketing': 'LH4',
+                            'Finance': 'LH5',
+                            'Management': 'Theater Hall'
+                        },
+                        'semester2': {
+                            'Marketing': 'LH6',
+                            'Finance': 'LH7',
+                            'Management': 'Conference Hall'
+                        }
+                    },
+                    'BSW': {
+                        'semester1': {
+                            'Social Work Theory': 'LH8',
+                            'Human Rights': 'LH9',
+                            'Counseling': 'Theater Hall'
+                        },
+                        'semester2': {
+                            'Social Work Practice': 'LH10',
+                            'Human Rights': 'Conference Hall',
+                            'Counseling Techniques': 'LH11'
+                        }
+                    },
+                    'BCOM': {
+                        'semester1': {
+                            'Accounting': 'LH12',
+                            'Economics': 'LH13',
+                            'Business Law': 'Theater Hall'
+                        },
+                        'semester2': {
+                            'Accounting': 'LH14',
+                            'Economics': 'Conference Hall',
+                            'Business Law': 'LH15'
+                        }
+                    }
+                };
+
+                return classrooms[department][semester];
+            }
+
+            // Handle department change to load batches
+            $('#department').change(function () {
+                var department = $(this).val();
+                $('#batch').empty().append('<option value="">Select Batch</option>');
+
+                if (department) {
+                    var batches = {
+                        'BSC': ['Batch 11', 'Batch 12','Batch 13', 'Batch 15'],
+                        'BBA': ['Batch 11', 'Batch 12','Batch 13', 'Batch 14'],
+                        'BSW': ['Batch 11', 'Batch 12','Batch 13', 'Batch 14'],
+                        'BCOM': ['Batch 11', 'Batch 12','Batch 13','Batch 14']
+                    };
+                    
+                    var selectedBatches = batches[department] || [];
+                    $.each(selectedBatches, function (index, value) {
+                        $('#batch').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                }
+            });
+
+            // View timetable button click event
+            $('#view-timetable').click(function () {
+                var batch = $('#batch').val();
+                var department = $('#department').val();
+
+                if (batch && department) {
+                    $('#semester-buttons').show(); // Show semester buttons when timetable is available
+
+                    const teachersSem1 = assignTeachers(department, 'semester1');
+                    const classroomsSem1 = assignClassrooms(department, 'semester1');
+
+                    const teachersSem2 = assignTeachers(department, 'semester2');
+                    const classroomsSem2 = assignClassrooms(department, 'semester2');
+
+                    let timetable1 = '';
+                    let timetable2 = '';
+
+                    // Timetable slots for semester 1
+                    const timetableSlotsSem1 = {
+                        'BSC': [
+                            { time: '7:30 - 8:25', subject: 'Math' },
+                            { time: '8:25 - 9:20', subject: 'Physics' },
+                            { time: '9:20 - 10:15', subject: 'Chemistry' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Math' },
+                            { time: '11:40 - 12:35', subject: 'Physics' },
+                            { time: '12:35 - 1:30', subject: 'Chemistry' }
+                        ],
+                        'BBA': [
+                            { time: '7:30 - 8:25', subject: 'Marketing' },
+                            { time: '8:25 - 9:20', subject: 'Finance' },
+                            { time: '9:20 - 10:15', subject: 'Management' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Marketing' },
+                            { time: '11:40 - 12:35', subject: 'Finance' },
+                            { time: '12:35 - 1:30', subject: 'Management' }
+                        ],
+                        'BSW': [
+                            { time: '7:30 - 8:25', subject: 'Social Work Theory' },
+                            { time: '8:25 - 9:20', subject: 'Human Rights' },
+                            { time: '9:20 - 10:15', subject: 'Counseling' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Social Work Theory' },
+                            { time: '11:40 - 12:35', subject: 'Human Rights' },
+                            { time: '12:35 - 1:30', subject: 'Counseling' }
+                        ],
+                        'BCOM': [
+                            { time: '7:30 - 8:25', subject: 'Accounting' },
+                            { time: '8:25 - 9:20', subject: 'Economics' },
+                            { time: '9:20 - 10:15', subject: 'Business Law' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Accounting' },
+                            { time: '11:40 - 12:35', subject: 'Economics' },
+                            { time: '12:35 - 1:30', subject: 'Business Law' }
+                        ]
+                    };
+
+                    // Timetable slots for semester 2
+                    const timetableSlotsSem2 = {
+                        'BSC': [
+                            { time: '7:30 - 8:25', subject: 'Math' },
+                            { time: '8:25 - 9:20', subject: 'Chemistry' },
+                            { time: '9:20 - 10:15', subject: 'Biology' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Math' },
+                            { time: '11:40 - 12:35', subject: 'Chemistry' },
+                            { time: '12:35 - 1:30', subject: 'Biology' }
+                        ],
+                        'BBA': [
+                            { time: '7:30 - 8:25', subject: 'Marketing' },
+                            { time: '8:25 - 9:20', subject: 'Finance' },
+                            { time: '9:20 - 10:15', subject: 'Management' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Marketing' },
+                            { time: '11:40 - 12:35', subject: 'Finance' },
+                            { time: '12:35 - 1:30', subject: 'Management' }
+                        ],
+                        'BSW': [
+                            { time: '7:30 - 8:25', subject: 'Social Work Practice' },
+                            { time: '8:25 - 9:20', subject: 'Human Rights' },
+                            { time: '9:20 - 10:15', subject: 'Counseling Techniques' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Social Work Practice' },
+                            { time: '11:40 - 12:35', subject: 'Human Rights' },
+                            { time: '12:35 - 1:30', subject: 'Counseling Techniques' }
+                        ],
+                        'BCOM': [
+                            { time: '7:30 - 8:25', subject: 'Accounting' },
+                            { time: '8:25 - 9:20', subject: 'Economics' },
+                            { time: '9:20 - 10:15', subject: 'Business Law' },
+                            { time: '10:15 - 10:45', subject: 'BREAK', break: true },
+                            { time: '10:45 - 11:40', subject: 'Accounting' },
+                            { time: '11:40 - 12:35', subject: 'Economics' },
+                            { time: '12:35 - 1:30', subject: 'Business Law' }
+                        ]
+                    };
+
+                    // Populate semester 1 timetable
+                    timetableSlotsSem1[department].forEach(slot => {
+                        const teacher = teachersSem1[slot.subject] || 'BREAK';
+                        const classroom = classroomsSem1[slot.subject] || 'BREAK';
+                        timetable1 += `
+                            <tr${slot.break ? ' class="break"' : ''}>
+                                <td>${slot.time}</td>
+                                <td>${slot.subject}</td>
+                                <td>${teacher}</td>
+                                <td>${classroom}</td>
+                            </tr>
+                        `;
+                    });
+
+                    // Populate semester 2 timetable
+                    timetableSlotsSem2[department].forEach(slot => {
+                        const teacher = teachersSem2[slot.subject] || 'BREAK';
+                        const classroom = classroomsSem2[slot.subject] || 'BREAK';
+                        timetable2 += `
+                            <tr${slot.break ? ' class="break"' : ''}>
+                                <td>${slot.time}</td>
+                                <td>${slot.subject}</td>
+                                <td>${teacher}</td>
+                                <td>${classroom}</td>
+                            </tr>
+                        `;
+                    });
+
+                    $('#timetable-1').html(timetable1);
+                    $('#timetable-2').html(timetable2);
+                    $('.timetable-section').removeClass('active'); // Hide all timetable sections
+                } else {
+                    alert("Please select both department and batch.");
+                }
+            });
+
+            // Semester button click event
+            $('.semester-button').click(function () {
+                var semester = $(this).data('semester');
+                $('.timetable-section').removeClass('active'); // Hide all timetable sections
+                $('#semester-' + semester).addClass('active'); // Show the selected semester
+            });
+        });
+    </script>
+</body>
+</html>
