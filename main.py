@@ -231,27 +231,107 @@ def student_dashboard():
 def admin_timetable():
     if request.method == 'POST':
         day = request.form['day']
-        batch = request.form['batch']
         subject = request.form['subject']
-        lecture = request.form['lecture'] 
+        lecture = request.form['lecture']
         room = request.form['room']
         time = request.form['time']
+        batch = request.form['batch']
 
-        # Create a new timetable entry
-        new_entry = Timetable(day=day, batch=batch, subject=subject, lecture=lecture, room=room, time=time)
+        # Add timetable entry logic here
+        new_entry = Timetable(day=day, subject=subject, lecture=lecture, room=room, time=time, batch=batch)
         db.session.add(new_entry)
         db.session.commit()
+        flash('Timetable entry added successfully!')
+        return redirect('/admin_timetable')
 
-        flash('Timetable entry added successfully!', 'success')
-        return redirect(url_for('admin_timetable'))
+    # Fetch users registered as 'lecture'
+    lecturers = User.query.filter_by(role='lecture').all()  # Only fetch users with the role 'lecture'
+    timetable = Timetable.query.all()  # Fetch existing timetable entries
 
-    # Fetch all batches and lecturers for the dropdown
-    batches = Batch.query.all()
-    lecturers = User.query.filter_by(role='lecture').all()  # Only get lectures
-    
-    # Fetch existing timetable entries to display
-    timetable_entries = Timetable.query.all()  # Fetch all entries from the database
-    return render_template('admin_timetable.html', batches=batches, lecturers=lecturers, timetable=timetable_entries)
+    return render_template('admin_timetable.html', lecturers=lecturers, timetable=timetable)
+
+
+# In-memory list to store timetable entries
+timetable_entries = []
+entry_id = 1  # To simulate auto-incrementing IDs
+
+
+def update_entry_by_id(entry_id, new_data):
+    entry = Timetable.query.get(entry_id)  # Fetch the entry by ID
+    if entry:
+        # Update fields
+        entry.day = new_data['day']
+        entry.subject = new_data['subject']
+        entry.lecture = new_data['lecture']
+        entry.room = new_data['room']
+        entry.time = new_data['time']
+        entry.batch = new_data['batch']
+        db.session.commit()  # Commit the changes to the database
+
+
+# Define functions to handle entry retrieval, update, and delete
+def get_entry_by_id(entry_id):
+    """Fetch the timetable entry by its ID."""
+    return Timetable.query.get(entry_id)
+
+def update_entry_by_id(entry_id, new_data):
+    """Update the timetable entry with new data."""
+    entry = Timetable.query.get(entry_id)  # Find the entry by ID
+    if entry:
+        # Update the fields with new data
+        entry.day = new_data['day']
+        entry.subject = new_data['subject']
+        entry.lecture = new_data['lecture']
+        entry.room = new_data['room']
+        entry.time = new_data['time']
+        entry.batch = new_data['batch']
+        
+        db.session.commit()  # Commit the changes to the database
+
+def delete_entry_by_id(entry_id):
+    """Delete the timetable entry by its ID."""
+    entry = Timetable.query.get(entry_id)  # Find the entry by ID
+    if entry:
+        db.session.delete(entry)  # Delete the entry from the session
+        db.session.commit()  # Commit the changes to the database
+
+# Route to delete a timetable entry
+@app.route('/edit_timetable/<int:id>', methods=['POST'])
+def edit_timetable(id):
+    # Get data from the form
+    day = request.form['day']
+    subject = request.form['subject']
+    lecture = request.form['lecture']
+    room = request.form['room']
+    time = request.form['time']
+    batch = request.form['batch']
+
+    # Update the timetable entry in the database
+    timetable_entry = Timetable.query.get(id)
+    timetable_entry.day = day
+    timetable_entry.subject = subject
+    timetable_entry.lecture = lecture
+    timetable_entry.room = room
+    timetable_entry.time = time
+    timetable_entry.batch = batch
+    db.session.commit()
+
+    flash("Timetable entry updated successfully!")
+    return redirect(url_for('admin_timetable'))
+
+# Route to handle timetable entry deletion
+# Route to handle timetable entry deletion
+@app.route('/delete_timetable/<int:id>', methods=['POST'])
+def delete_timetable(id):
+    entry = Timetable.query.get(id)
+    if entry:
+        db.session.delete(entry)
+        db.session.commit()
+        flash('Timetable entry deleted successfully!')
+    else:
+        flash('Entry not found!')
+    return redirect(url_for('admin_timetable'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

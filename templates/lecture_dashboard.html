@@ -3,306 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Timetable</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Lecture Dashboard</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #2bb2a5; /* Background color */
             margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #2bb2a5;
+            padding: 20px; /* Padding around the page */
         }
-        .container {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        h1 {
+            text-align: center; /* Center the title */
+            color: #333; /* Dark gray text color */
+            margin-bottom: 20px; /* Space below the header */
         }
-        .main-content {
-            background-color: #43B9AD;
-            border-radius: 10px;
-            padding: 20px;
-            width: 80%;
-            max-width: 900px;
+        table {
+            width: 100%; /* Full width of the container */
+            border-collapse: collapse; /* Remove double borders */
+            margin: 20px 0; /* Margin above and below the table */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add shadow to table */
         }
-        .program-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            width: 100%;
+        th, td {
+            padding: 10px; /* Padding inside cells */
+            text-align: left; /* Align text to the left */
+            border: 1px solid #ddd; /* Light gray border for cells */
+            position: relative; /* Position for tooltip */
         }
-        .program-btn {
-            padding: 10px 20px;
-            background-color: #ffffff;
-            color: #3CAEA3;
-            border: 2px solid #3CAEA3;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        th {
+            background-color: #4CAF50; /* Green background for header */
+            color: white; /* White text for header */
         }
-        .program-btn:hover, .dropdown:hover .program-btn {
-            background-color: #3CAEA3;
-            color: #ffffff;
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray background for even rows */
         }
-        .dropdown {
-            position: relative;
-            display: inline-block;
+        tr:hover {
+            background-color: #ddd; /* Gray background on hover */
         }
-        .dropdown-content {
-            display: none;
+        a.logout {
+            display: inline-block; /* Display as block */
+            margin: 20px auto; /* Center the logout button */
+            padding: 10px 20px; /* Padding for button */
+            background-color: #f44336; /* Red background for button */
+            color: white; /* White text color */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners */
+            text-align: center; /* Center text */
+        }
+        a.logout:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+        /* Add a class for conflict styling */
+        .conflict {
+            background-color: rgba(255, 0, 0, 0.3); /* Light red background for visibility */
+            position: relative; /* Position for the line */
+        }
+        /* Red line for conflict */
+        .conflict::after {
+            content: '';
             position: absolute;
-            background-color: #ffffff;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            border-radius: 10px;
+            top: 50%; /* Center the line vertically */
+            left: 0;
+            right: 0;
+            height: 2px; /* Height of the line */
+            background-color: red; /* Color of the line */
+            z-index: 1; /* Ensure the line is on top */
         }
-        .dropdown-content a {
-            color: #3CAEA3;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-        .dropdown-content a:hover {
-            background-color: #3CAEA3;
+        /* Tooltip styles */
+        .tooltip {
+            position: absolute;
+            background-color: #333;
             color: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+            z-index: 10;
+            left: 50%; /* Center the tooltip */
+            transform: translateX(-50%); /* Adjust for centering */
+            top: 20%; /* Position it above the row */
+            white-space: nowrap; /* Prevent text wrapping */
         }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .timetable {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .timetable th, .timetable td {
-            border: 1px solid #ffffff;
-            padding: 10px;
-            text-align: center;
-            font-size: 14px;
-        }
-        .timetable th {
-            background-color: #43B9AD;
-            color: #ffffff;
-            font-weight: bold;
-        }
-        .timetable td {
-            background-color: #f4f4f4;
-        }
-        .timetable tbody tr td:first-child {
-            font-weight: bold;
-            background-color: #E5F6F7;
-        }
-        @media screen and (max-width: 768px) {
-            .program-buttons {
-                flex-direction: column;
-                align-items: center;
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block; /* Stack table elements on smaller screens */
             }
-            .program-btn {
-                width: 100%;
-                margin-bottom: 10px;
+            th {
+                display: none; /* Hide the header on small screens */
             }
-            .dropdown-content {
-                width: 100%;
+            tr {
+                margin-bottom: 15px; /* Space between rows */
             }
-            .timetable th, .timetable td {
-                font-size: 12px;
-                padding: 8px;
+            td {
+                text-align: right; /* Align text to the right for better readability */
+                position: relative; /* Position for the label */
+                padding-left: 50%; /* Padding for label */
+            }
+            td::before {
+                content: attr(data-label); /* Display the header as a label */
+                position: absolute; /* Absolute position for label */
+                left: 0; /* Align to the left */
+                padding-left: 10px; /* Padding for label */
+                font-weight: bold; /* Bold for better visibility */
+                text-align: left; /* Align text to the left */
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <div class="program-buttons">
-                <div class="dropdown">
-                    <button class="program-btn">BSC</button>
-                    <div class="dropdown-content">
-                        <a id="ethel" href="#">Madam Ethel</a>
-                        <a id="crusade" href="#">Mr. Crusade</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="program-btn">BBA</button>
-                    <div class="dropdown-content">
-                        <a id="blessings" href="#">Mr. Blessings Nyirenda</a>
-                        <a id="alice" href="#">Ms. Alice Kachale</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="program-btn">BSW</button>
-                    <div class="dropdown-content">
-                        <a id="daniel" href="#">Mr. Daniel Mvula</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="program-btn">BCOM</button>
-                    <div class="dropdown-content">
-                        <a id="mphatso" href="#">Dr. Mphatso Gondwe</a>
-                    </div>
-                </div>
-            </div>
+    <h1>Lecture Dashboard</h1>
 
-            <!-- Timetable -->
-            <table class="timetable" id="timetable">
-                <thead>
-                    <tr>
-                        <th>Days</th>
-                        <th>7:30 am - 9:30 am</th>
-                        <th>9:30 am - 11:30 am</th>
-                        <th>11:30 am - 12:30 pm</th>
-                        <th>12:30 pm - 2:30 pm</th>
-                        <th>2:30 pm - 4:30 pm</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Monday</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Tuesday</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Wednesday</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Thursday</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Friday</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <!-- Dropdown to filter by branch -->
+    <label for="branchFilter">Select your Branch:</label>
+    <select id="branchFilter">
+        <option value="">All</option>
+        <option value="BSC">BSC</option>
+        <option value="BBA">BBA</option>
+        <option value="BSW">BSW</option>
+        <option value="BCom">BCom</option>
+    </select>
+
+    <!-- Dropdown to filter by lecture -->
+    <label for="lectureFilter">Select Lecture:</label>
+    <select id="lectureFilter">
+        <option value="">All</option>
+        {% for entry in timetables %}
+        <option value="{{ entry.lecture }}">{{ entry.lecture }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Table to display timetable entries -->
+    <div class="timetable-container">
+        <table id="timetable">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Subject</th>
+                    <th>Lecture</th>
+                    <th>Room</th>
+                    <th>Time</th>
+                    <th>Branch</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in timetables %}
+                <tr>
+                    <td>{{ entry.day }}</td>
+                    <td>{{ entry.subject }}</td>
+                    <td>{{ entry.lecture }}</td>
+                    <td>{{ entry.room }}</td>
+                    <td>{{ entry.time }}</td>
+                    <td>{{ entry.batch }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
+    <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+
     <script>
-        // Example data from student_dashboard or external source
-        const lecturerTimetable = {
-            'Madam Ethel': {
-                'Monday': ['Math', 'Physics', '', 'Chemistry', ''],
-                'Tuesday': ['', 'Math', '', '', 'Physics'],
-                'Wednesday': ['Chemistry', '', 'Physics', 'Math', ''],
-                'Thursday': ['Math', 'Chemistry', '', 'Physics', ''],
-                'Friday': ['', 'Physics', 'Chemistry', '', 'Math']
-            },
-            'Mr. Crusade': {
-                'Monday': ['', '', 'Chemistry', '', 'Math'],
-                'Tuesday': ['Physics', '', 'Math', '', ''],
-                'Wednesday': ['Math', 'Chemistry', '', '', 'Physics'],
-                'Thursday': ['', 'Physics', '', 'Math', 'Chemistry'],
-                'Friday': ['Chemistry', '', 'Physics', 'Math', '']
-            },
-            'Mr. Blessings Nyirenda': {
-                'Monday': ['Marketing', 'Finance', '', 'Management', ''],
-                'Tuesday': ['', 'Marketing', '', '', 'Finance'],
-                'Wednesday': ['Management', '', 'Marketing', 'Finance', ''],
-                'Thursday': ['Finance', 'Management', '', '', 'Marketing'],
-                'Friday': ['Marketing', '', 'Finance', 'Management', '']
-            },
-            'Ms. Alice Kachale': {
-                'Monday': ['', '', 'Marketing', '', 'Finance'],
-                'Tuesday': ['Management', '', 'Marketing', '', ''],
-                'Wednesday': ['Finance', 'Marketing', '', '', 'Management'],
-                'Thursday': ['', 'Finance', 'Management', '', 'Marketing'],
-                'Friday': ['Management', '', 'Marketing', '', 'Finance']
-            },
-            'Mr. Daniel Mvula': {
-                'Monday': ['Social Work Theory', '', 'Human Rights', 'Counseling', ''],
-                'Tuesday': ['', 'Counseling', 'Social Work Theory', '', ''],
-                'Wednesday': ['Human Rights', 'Social Work Theory', '', 'Counseling', ''],
-                'Thursday': ['Counseling', '', 'Human Rights', 'Social Work Theory', ''],
-                'Friday': ['', 'Human Rights', '', 'Counseling', '']
-            },
-            'Dr. Mphatso Gondwe': {
-                'Monday': ['Accounting', 'Business Law', '', 'Economics', ''],
-                'Tuesday': ['', 'Accounting', '', '', 'Business Law'],
-                'Wednesday': ['Economics', '', 'Accounting', 'Business Law', ''],
-                'Thursday': ['Business Law', 'Economics', '', 'Accounting', ''],
-                'Friday': ['', 'Economics', 'Business Law', '', 'Accounting']
+        document.addEventListener("DOMContentLoaded", function() {
+            const table = document.getElementById('timetable');
+            const rows = table.getElementsByTagName('tr');
+            const entries = {};
+
+            // Collect all timetable entries based on day, room, time, and lecture
+            for (let i = 1; i < rows.length; i++) { // Start at 1 to skip header row
+                const cells = rows[i].getElementsByTagName('td');
+                const day = cells[0].innerText.trim();
+                const room = cells[3].innerText.trim();
+                const time = cells[4].innerText.trim();
+                const lecture = cells[2].innerText.trim();
+                const key = `${day}-${room}-${time}-${lecture}`; // Create a unique key for each entry
+
+                if (!entries[key]) {
+                    entries[key] = [];
+                }
+                entries[key].push(rows[i]); // Store the row reference for conflict resolution
             }
-        };
 
-        function updateTimetable(lecturer) {
-            const timetable = lecturerTimetable[lecturer];
-            const table = document.getElementById('timetable').getElementsByTagName('tbody')[0];
-
-            // Clear the timetable before updating
-            for (let i = 0; i < table.rows.length; i++) {
-                for (let j = 1; j < table.rows[i].cells.length; j++) {
-                    table.rows[i].cells[j].innerHTML = '';
+            // Check for conflicts and mark them
+            for (const key in entries) {
+                if (entries[key].length > 1) {
+                    entries[key].forEach(row => {
+                        row.classList.add('conflict'); // Add conflict class to all rows with the same key
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerText = 'Conflict: This class overlaps with another class.';
+                        row.appendChild(tooltip);
+                        row.addEventListener('mouseover', function() {
+                            tooltip.style.display = 'block';
+                        });
+                        row.addEventListener('mouseout', function() {
+                            tooltip.style.display = 'none';
+                        });
+                    });
                 }
             }
 
-            // Update the timetable with lecturer data
-            if (timetable) {
-                let rowIndex = 0;
-                for (let day in timetable) {
-                    let periods = timetable[day];
-                    let cells = table.rows[rowIndex].cells;
-                    for (let i = 0; i < periods.length; i++) {
-                        cells[i + 1].innerHTML = periods[i];
+            // Additional check to remove conflicts based on same lecture overlapping
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const day = cells[0].innerText.trim();
+                const time = cells[4].innerText.trim();
+                const lecture = cells[2].innerText.trim();
+
+                for (let j = i + 1; j < rows.length; j++) {
+                    const nextCells = rows[j].getElementsByTagName('td');
+                    const nextDay = nextCells[0].innerText.trim();
+                    const nextTime = nextCells[4].innerText.trim();
+                    const nextLecture = nextCells[2].innerText.trim();
+
+                    // Check for overlapping conditions
+                    if (day === nextDay && time === nextTime && lecture === nextLecture) {
+                        // If overlap found, add conflict class
+                        rows[j].classList.add('conflict'); // Add conflict class to the overlapping row
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerText = 'Conflict: This class overlaps with another class. Please contact Administrator for proper Schedule';
+                        rows[j].appendChild(tooltip);
+                        rows[j].addEventListener('mouseover', function() {
+                            tooltip.style.display = 'block';
+                        });
+                        rows[j].addEventListener('mouseout', function() {
+                            tooltip.style.display = 'none';
+                        });
                     }
-                    rowIndex++;
                 }
             }
-        }
 
-        // Event listeners for dropdown selections
-        document.getElementById('ethel').addEventListener('click', function() {
-            updateTimetable('Madam Ethel');
+            // Filter function
+            function filterTable() {
+                const branchFilter = document.getElementById('branchFilter');
+                const lectureFilter = document.getElementById('lectureFilter');
+                const branchValue = branchFilter.value.toLowerCase();
+                const lectureValue = lectureFilter.value.toLowerCase();
+
+                for (let i = 1; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td');
+                    const branch = cells[5].innerText.toLowerCase();
+                    const lecture = cells[2].innerText.toLowerCase();
+
+                    if ((branch.includes(branchValue) || branchValue === '') && (lecture.includes(lectureValue) || lectureValue === '')) {
+                        rows[i].style.display = ''; // Show the row
+                    } else {
+                        rows[i].style.display = 'none'; // Hide the row
+                    }
+                }
+            }
+
+            branchFilter.addEventListener('change', filterTable);
+            lectureFilter.addEventListener('change', filterTable);
         });
-
-        document.getElementById('crusade').addEventListener('click', function() {
-            updateTimetable('Mr. Crusade');
-        });
-
-        document.getElementById('blessings').addEventListener('click', function() {
-            updateTimetable('Mr. Blessings Nyirenda');
-        });
-
-        document.getElementById('alice').addEventListener('click', function() {
-            updateTimetable('Ms. Alice Kachale');
-        });
-
-        document.getElementById('daniel').addEventListener('click', function() {
-            updateTimetable('Mr. Daniel Mvula');
-        });
-
-        document.getElementById('mphatso').addEventListener('click', function() {
-            updateTimetable('Dr. Mphatso Gondwe');
-        });
-
-        // Add other event listeners as necessary
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 </body>
 </html>

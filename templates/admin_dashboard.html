@@ -102,7 +102,7 @@
         }
 
         /* Button styles */
-        .delete-btn, .edit-btn, .add-btn {
+        .delete-btn, .edit-btn, .add-btn  {
             background-color: #e74c3c; /* Red background for delete */
             color: white;
             border: none;
@@ -110,7 +110,7 @@
             cursor: pointer;
         }
 
-        .edit-btn {
+        .edit-btn{
             background-color: #3498db; /* Blue background for edit */
         }
 
@@ -138,6 +138,25 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        /* Manage Timetable and Back button styles to match Add User button */
+        .admin-btn, .home-btn {
+            background-color: #3498db; /* Blue background */
+            color: white; /* White text */
+            border: none;
+            padding: 5px 10px; /* Match padding of Add User button */
+            cursor: pointer;
+            border-radius: 5px; /* Rounded corners */
+            font-size: 14px; /* Adjust font size to match */
+            margin: 10px 5px; /* Add margin for spacing */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+        
+        /* Hover effects */
+        .admin-btn:hover, .home-btn:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            opacity: 0.9; /* Slight transparency */
+        }
+        
     </style>
 </head>
 <body>
@@ -213,7 +232,6 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <button class="home-btn" onclick="window.location.href='{{ url_for('admin_timetable') }}'">Manage Timetable</button>
             <h2>Registered Users</h2>
             <table class="user-table">
                 <thead>
@@ -254,6 +272,7 @@
             <input type="text" id="registration_number" class="form-input" placeholder="Enter registration number" required>
         </div>
         <button class="add-btn" onclick="addUser()">Add User</button>
+        <button class="admin-btn" onclick="window.location.href='{{ url_for('admin_timetable') }}'">Manage Timetables</button>
         <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}'">Back</button>
 
         <div id="message" style="margin-top: 10px; color: green;"></div>
