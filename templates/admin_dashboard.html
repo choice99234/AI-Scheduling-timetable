@@ -20,7 +20,7 @@
 
         /* Sidebar styles */
         .sidebar {
-            width: 50%; /* Half width for timetable */
+            width: 50%; /* Half width for sidebar */
             padding: 20px;
             background-color: #4ba3a2;
             color: white;
@@ -49,31 +49,6 @@
 
         .program-btn.active {
             background-color: #2a8587; /* Darker color for active button */
-        }
-
-        /* Timetable styles */
-        .timetable {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .timetable th, .timetable td {
-            border: 1px solid #2bb2a5;
-            padding: 10px;
-            text-align: center;
-            font-size: 14px;
-            color: #fff; /* Change text color of days */
-        }
-
-        .timetable th {
-            background-color: #2bb2a5;
-            font-weight: bold;
-        }
-
-        .timetable tbody tr td:first-child {
-            font-weight: bold;
-            background-color: #2bb2a5;
         }
 
         /* User table styles */
@@ -110,7 +85,7 @@
             cursor: pointer;
         }
 
-        .edit-btn{
+        .edit-btn {
             background-color: #3498db; /* Blue background for edit */
         }
 
@@ -138,6 +113,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        
         /* Manage Timetable and Back button styles to match Add User button */
         .admin-btn, .home-btn {
             background-color: #3498db; /* Blue background */
@@ -156,78 +132,32 @@
             background-color: #2980b9; /* Darker blue on hover */
             opacity: 0.9; /* Slight transparency */
         }
-        
+
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <h2>AI Timetable</h2>
-
-            <!-- Program buttons -->
-            <div class="program-buttons">
-                <button class="program-btn active">BSC</button>
-                <button class="program-btn">BSW</button>
-                <button class="program-btn">BCOM</button>
-                <button class="program-btn">BBA</button>
+            <h2>Add New User</h2>
+            <!-- Add User Form -->
+            <div class="form-group">
+                <label class="form-label" for="username">Username:</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter username" required>
             </div>
+            <div class="form-group">
+                <label class="form-label" for="role">Role:</label>
+                <input type="text" id="role" class="form-input" placeholder="Enter role (e.g., admin, lecture, student)" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="registration_number">Registration Number:</label>
+                <input type="text" id="registration_number" class="form-input" placeholder="Enter registration number" required>
+            </div>
+            <button class="add-btn" onclick="addUser()">Add User</button>
+            <button class="admin-btn" onclick="window.location.href='{{ url_for('admin_timetable') }}'">Manage Timetables</button>
+            <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}'">Back</button>
 
-            <!-- Timetable for BSC -->
-            <table class="timetable">
-                <thead>
-                    <tr>
-                        <th>DAYS</th>
-                        <th>7:30 am to 9:30</th>
-                        <th>9:30 to 11:30</th>
-                        <th>11:30 to 12:30</th>
-                        <th>12:30 to 2:30</th>
-                        <th>2:30 to 4:30</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>MONDAY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>TUESDAY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>WEDNESDAY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>THURSDAY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>FRIDAY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="message" style="margin-top: 10px; color: green;"></div>
         </div>
 
         <!-- Main Content -->
@@ -256,28 +186,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-
-        <!-- Add User Form -->
-        <h3>Add New User</h3>
-        <div class="form-group">
-            <label class="form-label" for="username">Username:</label>
-            <input type="text" id="username" class="form-input" placeholder="Enter username" required>
         </div>
-        <div class="form-group">
-            <label class="form-label" for="role">Role:</label>
-            <input type="text" id="role" class="form-input" placeholder="Enter role (e.g., admin, lecture, student)" required>
-        </div>
-        <div class="form-group">
-            <label class="form-label" for="registration_number">Registration Number:</label>
-            <input type="text" id="registration_number" class="form-input" placeholder="Enter registration number" required>
-        </div>
-        <button class="add-btn" onclick="addUser()">Add User</button>
-        <button class="admin-btn" onclick="window.location.href='{{ url_for('admin_timetable') }}'">Manage Timetables</button>
-        <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}'">Back</button>
-
-        <div id="message" style="margin-top: 10px; color: green;"></div>
-       </div>
-       </div>
+    </div>
 
     <script>
         function deleteUser(userId) {
@@ -337,7 +247,7 @@
                             location.reload();
                         }, 1000);
                     } else {
-                        document.getElementById('message').textContent = 'Credencials already exists';
+                        document.getElementById('message').textContent = 'Credentials already exist';
                     }
                 });
             } else {
